@@ -62,9 +62,13 @@ class LearningMaterialController extends Controller
     public function open(LearningMaterial $learningMaterial)
     {
         Gate::authorize('view', $learningMaterial);
-        abort_unless(Storage::disk('local')->exists($learningMaterial->file_path), 404, 'File materi tidak ditemukan.');
+        abort_unless(Storage::disk($learningMaterial->storage_disk)->exists($learningMaterial->file_path), 404, 'File materi tidak ditemukan.');
 
-        return response()->file(Storage::disk('local')->path($learningMaterial->file_path), [
+        if ($learningMaterial->file_url) {
+            return redirect()->away($learningMaterial->file_url);
+        }
+
+        return response()->file(Storage::disk($learningMaterial->storage_disk)->path($learningMaterial->file_path), [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="'.$learningMaterial->original_name.'"',
         ]);

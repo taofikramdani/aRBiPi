@@ -42,3 +42,28 @@ composer run dev
 - Siswa: `siswa@arbipi.id` / `password`
 
 Tanpa Hugging Face token, fitur rekomendasi otomatis menggunakan fallback lokal. ERD tersedia di [docs/ERD.md](docs/ERD.md).
+
+## Docker Lokal
+
+Jalankan Docker Desktop, lalu gunakan image lokal:
+
+```bash
+docker build -t arbipi:local .
+docker compose -f docker-compose.yml -f docker-compose.local.yml up -d
+docker exec arbipi_app php artisan migrate --force
+```
+
+Pastikan `.env` berisi `ECR_IMAGE=arbipi:local` dan `APP_PORT=8080`. Override lokal otomatis memakai `host.docker.internal` untuk mengakses MySQL XAMPP tanpa container MySQL.
+
+## Azure Blob Storage
+
+Untuk menyimpan upload materi ke Azure Blob dan URL-nya ke database:
+
+```env
+MATERIAL_FILESYSTEM_DISK=azure
+AZURE_STORAGE_CONNECTION_STRING=
+AZURE_STORAGE_CONTAINER=
+AZURE_STORAGE_PREFIX=materials
+AZURE_STORAGE_URL=https://nama-akun.blob.core.windows.net/nama-container
+AZURE_STORAGE_PUBLIC=true
+```

@@ -10,9 +10,11 @@ class LearningMaterialService
 {
     public function create(array $data, UploadedFile $pdf, int $userId): LearningMaterial
     {
-        $path = $pdf->store('learning-materials', 'local');
+        $disk = $this->disk();
+        $this->ensureConfigured($disk);
+        $path = $pdf->store('learning-materials', $disk);
 
-        return LearningMaterial::create($this->attributes($data, $pdf, $path) + ['uploaded_by' => $userId]);
+        return LearningMaterial::create($this->attributes($data, $pdf, $disk, $path) + ['uploaded_by' => $userId]);
     }
 
     public function update(LearningMaterial $material, array $data, ?UploadedFile $pdf): LearningMaterial
@@ -20,9 +22,11 @@ class LearningMaterialService
         $attributes = $data;
 
         if ($pdf) {
-            $newPath = $pdf->store('learning-materials', 'local');
-            Storage::disk('local')->delete($material->file_path);
-            $attributes = $this->attributes($data, $pdf, $newPath);
+            $disk = $this->disk();
+            $this->ensureConfigured($disk);
+            $newPath = $pdf->store('learning-materials', $disk);
+            Storage::disk($material->storage_disk)->delete($material->file_path);
+            $attributes = $this->attributes($data, $pdf, $disk, $newPath);
         }
 
         $material->update($attributes);
@@ -32,16 +36,43 @@ class LearningMaterialService
 
     public function delete(LearningMaterial $material): void
     {
-        Storage::disk('local')->delete($material->file_path);
+        Storage::disk($material->storage_disk)->delete($material->file_path);
         $material->delete();
     }
 
-    private function attributes(array $data, UploadedFile $pdf, string $path): array
+    private function attributes(array $data, UploadedFile $pdf, string $disk, string $path): array
     {
         return $data + [
+            'storage_disk' => $disk,
             'file_path' => $path,
+            'file_url' => $this->url($disk, $path),
             'original_name' => $pdf->getClientOriginalName(),
             'file_size' => $pdf->getSize(),
         ];
+    }
+
+    private function disk(): string
+    {
+        return config('filesystems.materials_disk', 'local');
+    }
+
+    private function url(string $disk, string $path): ?string
+    {
+        if ($disk !== 'azure') {
+            return null;
+        }
+
+        return implode('/', array_filter([
+            rtrim(config('filesystems.disks.azure.url'), '/'),
+            trim(config('filesystems.disks.azure.prefix', ''), '/'),
+            ltrim($path, '/'),
+        ]));
+    }
+
+    private function ensureConfigured(string $disk): void
+    {
+        if ($disk === 'azure' && blank(config('filesystems.disks.azure.url'))) {
+            throw new \RuntimeException('AZURE_STORAGE_URL wajib diisi saat MATERIAL_FILESYSTEM_DISK=azure.');
+        }
     }
 }

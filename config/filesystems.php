@@ -15,6 +15,8 @@ return [
 
     'default' => env('FILESYSTEM_DISK', 'local'),
 
+    'materials_disk' => env('MATERIAL_FILESYSTEM_DISK', 'local'),
+
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -45,6 +47,16 @@ return [
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
+        ],
+
+        'azure' => [
+            'driver' => 'azure',
+            'connection_string' => env('AZURE_STORAGE_CONNECTION_STRING'),
+            'container' => env('AZURE_STORAGE_CONTAINER'),
+            'prefix' => env('AZURE_STORAGE_PREFIX', ''),
+            'url' => env('AZURE_STORAGE_URL'),
+            'public' => env('AZURE_STORAGE_PUBLIC', true),
+            'throw' => true,
         ],
 
         's3' => [

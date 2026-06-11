@@ -1,0 +1,44 @@
+services:
+  app:
+    image: ${ECR_IMAGE}
+    container_name: arbipi_app
+    env_file:
+      - .env
+    volumes:
+      - public_assets:/shared-public
+    restart: unless-stopped
+    networks:
+      - arbipi
+
+  nginx:
+    image: nginx:alpine
+    container_name: arbipi_nginx
+    env_file:
+      - .env
+    depends_on:
+      - app
+    ports:
+      - "${APP_PORT:-80}:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - public_assets:/var/www/html/public:ro
+    restart: unless-stopped
+    networks:
+      - arbipi
+
+  queue:
+    image: ${ECR_IMAGE}
+    container_name: arbipi_queue
+    env_file:
+      - .env
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=120
+    restart: unless-stopped
+    networks:
+      - arbipi
+
+volumes:
+  public_assets:
+
+networks:
+  arbipi:
+    driver: bridge

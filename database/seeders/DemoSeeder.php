@@ -46,7 +46,9 @@ class DemoSeeder extends Seeder
                 [
                     'uploaded_by' => $admin->id,
                     'description' => $index === 2 ? 'Pengenalan Docker dan container.' : 'Modul pembelajaran komputasi awan.',
+                    'storage_disk' => 'local',
                     'file_path' => $path,
+                    'file_url' => null,
                     'original_name' => $filename,
                     'file_size' => Storage::disk('local')->size($path),
                     'is_published' => true,
