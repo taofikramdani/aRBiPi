@@ -31,7 +31,7 @@
 
 <script>
 (function () {
-    const pollUrl = '{{ route('admin.ai.questions.poll') }}';
+    const pollUrl = '{{ route('admin.ai.questions.poll', absolute: false) }}';
     const interval = setInterval(async () => {
         try {
             const res = await fetch(pollUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });

@@ -97,6 +97,18 @@ class AdminQuestionWorkflowTest extends TestCase
             ->assertSee('Generate 10 Soal');
     }
 
+    public function test_question_polling_uses_a_relative_url(): void
+    {
+        Role::findOrCreate('admin');
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $this->actingAs($admin)->get(route('admin.questions.index'))
+            ->assertOk()
+            ->assertSee("const pollUrl = '/admin/ai/questions/poll';", false)
+            ->assertDontSee("const pollUrl = 'http://", false);
+    }
+
     public function test_failed_generation_poll_preserves_error_for_page_reload(): void
     {
         Role::findOrCreate('admin');
