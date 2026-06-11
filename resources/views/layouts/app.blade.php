@@ -55,7 +55,6 @@
             </div>
         </header>
         <main class="p-5 lg:p-7">
-            <div class="mb-6"><h1 class="text-xl font-semibold text-slate-800">{{ $header ?? 'aRBiPi' }}</h1><p class="mt-1 text-xs text-slate-400">SDG 4 / Pendidikan Berkualitas</p></div>
             @if(session('success'))<div class="mb-5 rounded-lg bg-emerald-50 p-4 text-sm text-emerald-700">{{ session('success') }}</div>@endif
             @if($errors->any())<div class="mb-5 rounded-lg bg-red-50 p-4 text-sm text-red-700">{{ $errors->first() }}</div>@endif
             {{ $slot }}
