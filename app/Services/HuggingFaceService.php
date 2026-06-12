@@ -53,7 +53,7 @@ PROMPT;
             return $this->fallbackRecommendation($subject, $score);
         }
 
-        return $this->text("Beri rekomendasi belajar singkat dan terstruktur dalam Markdown Bahasa Indonesia untuk siswa dengan nilai {$score} pada {$subject}.")
+        return $this->text("Beri rekomendasi belajar singkat dalam Markdown Bahasa Indonesia untuk siswa dengan nilai {$score} pada {$subject}. Batasi maksimal 180 kata. Gunakan judul pendek dan bullet list; jangan gunakan tabel.")
             ?? $this->fallbackRecommendation($subject, $score);
     }
 
@@ -70,7 +70,7 @@ PROMPT;
             ->join("\n");
         $prompt = <<<PROMPT
 Anda adalah aRBi Assistant, tutor belajar ramah untuk siswa Indonesia.
-Jawab dengan jelas, ringkas, bertahap, dan sesuai usia siswa. Bantu siswa memahami konsep, tetapi jangan langsung mengerjakan tugas atau ujian tanpa penjelasan. Gunakan Bahasa Indonesia.
+Jawab dengan jelas, ringkas, bertahap, dan sesuai usia siswa. Batasi jawaban normal maksimal 250 kata kecuali siswa meminta penjelasan lebih panjang. Gunakan Markdown dengan judul pendek dan bullet list bila membantu; hindari tabel kecuali benar-benar diperlukan. Bantu siswa memahami konsep, tetapi jangan langsung mengerjakan tugas atau ujian tanpa penjelasan. Gunakan Bahasa Indonesia.
 
 Konteks siswa:
 - Nama: {$user->name}

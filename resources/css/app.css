@@ -20,14 +20,29 @@
     .table th { @apply bg-slate-50 px-5 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500; }
     .table td { @apply px-5 py-4 align-top; }
     .dashboard-panel { @apply rounded-xl bg-white shadow-[0_4px_18px_rgba(15,23,42,0.06)]; }
-    .ai-content { @apply space-y-3 text-sm leading-7 text-slate-600; }
-    .ai-content h1, .ai-content h2, .ai-content h3 { @apply mt-5 font-semibold text-slate-800; }
+    .ai-content { @apply space-y-3 break-words text-sm leading-6 text-slate-600; }
+    .ai-content > :first-child { @apply mt-0; }
+    .ai-content > :last-child { @apply mb-0; }
+    .ai-content h1, .ai-content h2, .ai-content h3 { @apply mb-2 mt-4 font-semibold text-slate-800; }
     .ai-content h1 { @apply text-lg; }
     .ai-content h2 { @apply text-base; }
     .ai-content h3 { @apply border-l-2 border-indigo-500 pl-3 text-sm; }
     .ai-content strong { @apply font-semibold text-slate-700; }
-    .ai-content ul { @apply space-y-2 pl-5; }
+    .ai-content ul, .ai-content ol { @apply space-y-1.5 pl-5; }
+    .ai-content ul { @apply list-disc; }
+    .ai-content ol { @apply list-decimal; }
     .ai-content li { @apply relative pl-1; }
     .ai-content li::marker { @apply text-indigo-500; }
-    .ai-content hr { @apply my-5 border-slate-100; }
+    .ai-content hr { @apply my-4 border-slate-100; }
+    .ai-content table { @apply block w-full overflow-x-auto rounded-lg border border-slate-200 text-left text-xs; }
+    .ai-content thead { @apply bg-slate-50 text-slate-700; }
+    .ai-content th { @apply whitespace-nowrap px-3 py-2 font-semibold; }
+    .ai-content td { @apply min-w-28 border-t border-slate-100 px-3 py-2 align-top; }
+    .ai-content code { @apply rounded bg-slate-100 px-1 py-0.5 text-[.9em] text-indigo-700; }
+    .ai-content pre { @apply overflow-x-auto rounded-lg bg-slate-900 p-3 text-xs leading-5 text-slate-100; }
+    .ai-content pre code { @apply bg-transparent p-0 text-inherit; }
+    .ai-content-chat { @apply space-y-2 text-xs leading-5; }
+    .ai-content-chat h1, .ai-content-chat h2, .ai-content-chat h3 { @apply mb-1.5 mt-3 text-xs; }
+    .ai-content-chat table { @apply text-[10px]; }
+    .ai-content-chat th, .ai-content-chat td { @apply min-w-24 px-2 py-1.5; }
 }

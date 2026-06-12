@@ -16,8 +16,11 @@ class AiContentFormatter
 
         // AI responses occasionally return valid Markdown without useful line breaks.
         $content = preg_replace('/\s*\*\*([^*\n]{2,100}:)\*\*\s*/u', "\n\n### $1\n\n", $content);
-        $content = preg_replace('/\s*---\s*/u', "\n\n---\n\n", $content);
+        $content = preg_replace('/^[ \t]*---[ \t]*$/mu', "\n\n---\n\n", $content);
         $content = preg_replace('/[ \t]+\*[ \t]+(?=\S)/u', "\n- ", $content);
+        $content = preg_replace('/[ \t]+\|\|[ \t]*/u', " |\n| ", $content);
+        $content = preg_replace('/(?<!\n)[ \t]+(?=\d+\.\s+\*\*[^*\n]+\*\*)/u', "\n\n", $content);
+        $content = preg_replace('/(?<!\n)[ \t]+(?=#{1,6}\s+)/u', "\n\n", $content);
         $content = preg_replace("/\n{3,}/", "\n\n", $content);
 
         return Str::markdown($content, [

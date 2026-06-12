@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\AssistantMessage;
 use App\Services\HuggingFaceService;
+use App\Support\AiContentFormatter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use RuntimeException;
@@ -14,7 +16,7 @@ class AssistantController extends Controller
     {
         $messages = $request->user()->assistantMessages()->latest('id')->limit(30)->get()->reverse()->values();
 
-        return response()->json(['messages' => $messages]);
+        return response()->json(['messages' => $messages->map(fn ($message) => $this->formatMessage($message))]);
     }
 
     public function store(Request $request, HuggingFaceService $ai): JsonResponse
@@ -33,7 +35,10 @@ class AssistantController extends Controller
 
         $assistantMessage = $user->assistantMessages()->create(['role' => 'assistant', 'content' => $reply]);
 
-        return response()->json(['user_message' => $userMessage, 'assistant_message' => $assistantMessage]);
+        return response()->json([
+            'user_message' => $this->formatMessage($userMessage),
+            'assistant_message' => $this->formatMessage($assistantMessage),
+        ]);
     }
 
     public function destroy(Request $request): JsonResponse
@@ -41,5 +46,17 @@ class AssistantController extends Controller
         $request->user()->assistantMessages()->delete();
 
         return response()->json(['message' => 'Riwayat percakapan dihapus.']);
+    }
+
+    private function formatMessage(AssistantMessage $message): array
+    {
+        return [
+            'id' => $message->id,
+            'role' => $message->role,
+            'content' => $message->content,
+            'rendered_content' => $message->role === 'assistant'
+                ? AiContentFormatter::toHtml($message->content)
+                : null,
+        ];
     }
 }

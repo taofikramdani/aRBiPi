@@ -103,6 +103,28 @@ class LearningMaterialTest extends TestCase
         Storage::disk('azure')->assertExists($material->file_path);
     }
 
+    public function test_admin_and_student_are_redirected_to_material_file_url(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $student = User::factory()->create();
+        $student->assignRole('student');
+        $fileUrl = 'https://arpibi2026.blob.core.windows.net/materials/learning-materials/module.pdf';
+        $material = LearningMaterial::factory()->create([
+            'storage_disk' => 'azure',
+            'file_url' => $fileUrl,
+            'is_published' => true,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.learning-materials.open', $material))
+            ->assertRedirect($fileUrl);
+
+        $this->actingAs($student)
+            ->get(route('student.learning-materials.open', $material))
+            ->assertRedirect($fileUrl);
+    }
+
     public function test_deleting_material_also_deletes_pdf(): void
     {
         $admin = User::factory()->create();

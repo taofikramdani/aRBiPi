@@ -23,13 +23,16 @@ class StudentAssistantTest extends TestCase
 
         $this->actingAs($student)->postJson(route('student.assistant.store'), [
             'message' => 'Apa itu container?',
-        ])->assertOk()->assertJsonPath('assistant_message.role', 'assistant');
+        ])->assertOk()
+            ->assertJsonPath('assistant_message.role', 'assistant')
+            ->assertJsonPath('assistant_message.rendered_content', fn ($html) => str_contains($html, '<p>Container adalah paket aplikasi beserta dependensinya.</p>'));
 
         $this->actingAs($student)->getJson(route('student.assistant.index'))
             ->assertOk()
             ->assertJsonCount(2, 'messages')
             ->assertJsonPath('messages.0.role', 'user')
-            ->assertJsonPath('messages.1.role', 'assistant');
+            ->assertJsonPath('messages.1.role', 'assistant')
+            ->assertJsonPath('messages.1.rendered_content', fn ($html) => str_contains($html, '<p>Container adalah paket aplikasi beserta dependensinya.</p>'));
     }
 
     public function test_student_can_clear_assistant_history(): void

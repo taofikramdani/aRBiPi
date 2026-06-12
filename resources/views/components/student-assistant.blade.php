@@ -1,13 +1,13 @@
 <div x-data="arbipiAssistant()" x-init="load()" class="fixed bottom-5 right-5 z-50" x-cloak>
-    <section x-show="open" x-transition.origin.bottom.right class="mb-3 flex h-[min(620px,calc(100vh-110px))] w-[min(390px,calc(100vw-32px))] flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-2xl shadow-slate-300/70">
-        <header class="flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-4 text-white">
-            <span class="grid size-10 place-items-center rounded-xl bg-white/15 font-bold">aR</span>
+    <section x-show="open" x-transition.origin.bottom.right class="mb-3 flex h-[min(560px,calc(100vh-96px))] w-[min(420px,calc(100vw-24px))] flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-2xl shadow-slate-300/70">
+        <header class="flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-3 text-white">
+            <span class="grid size-9 place-items-center rounded-xl bg-white/15 text-sm font-bold">aR</span>
             <div class="min-w-0 flex-1"><h2 class="text-sm font-semibold">aRBi Assistant</h2><p class="text-[10px] text-white/70">Teman belajar berbasis Hugging Face</p></div>
             <button @click="clearHistory()" title="Hapus riwayat" class="grid size-8 place-items-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white"><svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18m-2 0-1 14H6L5 6m3 0V4h8v2m-6 4v6m4-6v6"/></svg></button>
             <button @click="open=false" class="grid size-8 place-items-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white"><svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
         </header>
 
-        <div x-ref="messages" class="flex-1 space-y-3 overflow-y-auto bg-slate-50/70 p-4">
+        <div x-ref="messages" class="flex-1 space-y-3 overflow-y-auto bg-slate-50/70 p-3">
             <div x-show="messages.length === 0" class="py-8 text-center">
                 <span class="mx-auto grid size-14 place-items-center rounded-2xl bg-indigo-100 text-xl font-bold text-indigo-600">aR</span>
                 <h3 class="mt-4 text-sm font-semibold text-slate-700">Halo, siap belajar?</h3>
@@ -19,9 +19,11 @@
                 </div>
             </div>
             <template x-for="item in messages" :key="item.id">
-                <div class="flex" :class="item.role === 'user' ? 'justify-end' : 'justify-start'">
-                    <div class="max-w-[85%] rounded-2xl px-3.5 py-3 text-xs leading-relaxed shadow-sm" :class="item.role === 'user' ? 'rounded-br-md bg-indigo-600 text-white' : 'rounded-bl-md border border-slate-100 bg-white text-slate-600'">
-                        <p class="whitespace-pre-wrap" x-text="item.content"></p>
+                <div class="flex gap-2" :class="item.role === 'user' ? 'justify-end' : 'justify-start'">
+                    <span x-show="item.role === 'assistant'" class="mt-1 grid size-7 shrink-0 place-items-center rounded-lg bg-indigo-100 text-[9px] font-bold text-indigo-600">aR</span>
+                    <div class="max-w-[88%] rounded-2xl px-3.5 py-2.5 text-xs shadow-sm" :class="item.role === 'user' ? 'rounded-br-md bg-indigo-600 text-white' : 'rounded-bl-md border border-slate-100 bg-white text-slate-600'">
+                        <p x-show="item.role === 'user'" class="whitespace-pre-wrap leading-relaxed" x-text="item.content"></p>
+                        <div x-show="item.role === 'assistant'" class="ai-content ai-content-chat" x-html="item.rendered_content"></div>
                     </div>
                 </div>
             </template>
