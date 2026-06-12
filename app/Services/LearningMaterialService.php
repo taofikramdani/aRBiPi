@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\LearningMaterial;
+use App\Support\MaterialFileUrl;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -45,7 +46,7 @@ class LearningMaterialService
         return $data + [
             'storage_disk' => $disk,
             'file_path' => $path,
-            'file_url' => $this->url($disk, $path),
+            'file_url' => MaterialFileUrl::make($disk, $path),
             'original_name' => $pdf->getClientOriginalName(),
             'file_size' => $pdf->getSize(),
         ];
@@ -54,19 +55,6 @@ class LearningMaterialService
     private function disk(): string
     {
         return config('filesystems.materials_disk', 'local');
-    }
-
-    private function url(string $disk, string $path): ?string
-    {
-        if ($disk !== 'azure') {
-            return null;
-        }
-
-        return implode('/', array_filter([
-            rtrim(config('filesystems.disks.azure.url'), '/'),
-            trim(config('filesystems.disks.azure.prefix', ''), '/'),
-            ltrim($path, '/'),
-        ]));
     }
 
     private function ensureConfigured(string $disk): void

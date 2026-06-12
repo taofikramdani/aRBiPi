@@ -52,7 +52,7 @@ return [
         'azure' => [
             'driver' => 'azure',
             'connection_string' => env('AZURE_STORAGE_CONNECTION_STRING'),
-            'container' => env('AZURE_STORAGE_CONTAINER'),
+            'container' => env('AZURE_STORAGE_CONTAINER') ?: 'materials',
             'prefix' => env('AZURE_STORAGE_PREFIX', ''),
             'url' => env('AZURE_STORAGE_URL'),
             'public' => env('AZURE_STORAGE_PUBLIC', true),

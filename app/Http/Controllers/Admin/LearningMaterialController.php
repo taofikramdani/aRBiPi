@@ -8,6 +8,7 @@ use App\Models\LearningMaterial;
 use App\Models\Subject;
 use App\Repositories\LearningMaterialRepository;
 use App\Services\LearningMaterialService;
+use App\Support\MaterialFileUrl;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
@@ -63,8 +64,14 @@ class LearningMaterialController extends Controller
     {
         Gate::authorize('view', $learningMaterial);
 
-        if ($learningMaterial->file_url) {
-            return redirect()->away($learningMaterial->file_url);
+        $fileUrl = MaterialFileUrl::make(
+            $learningMaterial->storage_disk,
+            $learningMaterial->file_path,
+            $learningMaterial->file_url,
+        );
+
+        if ($fileUrl) {
+            return redirect()->away($fileUrl);
         }
 
         abort_unless(Storage::disk($learningMaterial->storage_disk)->exists($learningMaterial->file_path), 404, 'File materi tidak ditemukan.');

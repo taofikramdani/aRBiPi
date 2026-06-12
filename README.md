@@ -62,8 +62,8 @@ Untuk menyimpan upload materi ke Azure Blob dan URL-nya ke database:
 ```env
 MATERIAL_FILESYSTEM_DISK=azure
 AZURE_STORAGE_CONNECTION_STRING=
-AZURE_STORAGE_CONTAINER=
-AZURE_STORAGE_PREFIX=materials
-AZURE_STORAGE_URL=https://nama-akun.blob.core.windows.net/nama-container
+AZURE_STORAGE_CONTAINER=materials
+AZURE_STORAGE_PREFIX=
+AZURE_STORAGE_URL=https://nama-akun.blob.core.windows.net
 AZURE_STORAGE_PUBLIC=true
 ```
